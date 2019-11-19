@@ -7,10 +7,10 @@ if (process.env.MODE === "PROD_") {
 const express = require("express");
 const app = express();
 const fs = require("fs");
-const Sentry = require("@sentry/node");
-Sentry.init({
-  dsn: "https://2948cdf0a6674931b32699ee081cce4e@sentry.io/1805408"
-});
+// const Sentry = require("@sentry/node");
+// Sentry.init({
+//   dsn: "https://2948cdf0a6674931b32699ee081cce4e@sentry.io/1805408"
+// });
 
 let options = {};
 if (process.env.MODE === "PROD_") {
@@ -20,12 +20,13 @@ if (process.env.MODE === "PROD_") {
   };
 }
 
-const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
-const serverPort = process.env[process.env.MODE + "PORT"];
+// const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
+
+const serverPort = process.env.PORT || process.env[process.env.MODE + "PORT"];
 const server = https.createServer(options, app);
 const io = require("socket.io")(server);
 
-const globalFunctions = require("./e2ps_modules/global-functions");
+// const globalFunctions = require("./e2ps_modules/global-functions");
 
 //SET APP HEADERS
 app.use(function(req, res, next) {
@@ -63,6 +64,10 @@ io.on("connection", function(socket) {
 });
 
 //LISTEN CONFIRMATION
-server.listen(serverPort, ipAddress, function() {
-  console.log("E2PS Push Notification Server at %s port", serverPort);
-});
+// server.listen(serverPort, ipAddress, function() {
+//   console.log("E2PS Push Notification Server at %s port", serverPort);
+// });
+
+server.listen(serverPort, () =>
+  console.log("E2PS Push Notification Server at ", serverPort)
+);
