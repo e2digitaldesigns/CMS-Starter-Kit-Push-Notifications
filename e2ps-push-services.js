@@ -20,13 +20,10 @@ if (process.env.MODE === "PROD_") {
   };
 }
 
-// const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
-
-const serverPort = process.env.PORT || 8002;
+const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
+const serverPort = process.env.PORT || process.env[process.env.MODE + "PORT"];
 const server = https.createServer(options, app);
 const io = require("socket.io")(server);
-
-// const globalFunctions = require("./e2ps_modules/global-functions");
 
 //SET APP HEADERS
 app.use(function(req, res, next) {
@@ -47,10 +44,9 @@ app.use(function(req, res, next) {
 //GET APPLICATION`
 app.get("/", function(req, res) {
   "use strict";
-  // res.sendFile(__dirname + "/e2ps.html");
-  res.send(serverPort);
+  res.sendFile(__dirname + "/e2ps.html");
   //   io.emit("chatServices", getParams(req.url));
-  io.emit("chatServices", { a: "b", c: "d", serverPort });
+  io.emit("chatServices", { a: "a", b: "b" });
 });
 
 //SEND NOTIFICATION
@@ -65,7 +61,7 @@ io.on("connection", function(socket) {
   });
 });
 
-//LISTEN CONFIRMATION
+// LISTEN CONFIRMATION
 // server.listen(serverPort, ipAddress, function() {
 //   console.log("E2PS Push Notification Server at %s port", serverPort);
 // });
