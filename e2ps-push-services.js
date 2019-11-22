@@ -50,6 +50,10 @@ io.on("connection", function(socket) {
   socket.on("notificationServices", function(data) {
     io.emit("notificationServices", data);
   });
+
+  socket.on("userChatServices", function(data) {
+    io.emit("userChatServices", data);
+  });
 });
 
 //Set Server & Listen
