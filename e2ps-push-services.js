@@ -47,7 +47,8 @@ app.use(function(req, res, next) {
 //GET APPLICATION`
 app.get("/", function(req, res) {
   "use strict";
-  res.sendFile(__dirname + "/e2ps.html");
+  // res.sendFile(__dirname + "/e2ps.html");
+  res.send(serverPort);
   //   io.emit("chatServices", getParams(req.url));
   io.emit("chatServices", { a: "b", c: "d", serverPort });
 });
