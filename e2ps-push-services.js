@@ -1,16 +1,11 @@
-console.clear();
-require("dotenv").config();
 let https = require("http");
-if (process.env.MODE === "PROD_") {
-  https = require("https");
-}
 const express = require("express");
 const app = express();
 const fs = require("fs");
-// const Sentry = require("@sentry/node");
-// Sentry.init({
-//   dsn: "https://2948cdf0a6674931b32699ee081cce4e@sentry.io/1805408"
-// });
+const Sentry = require("@sentry/node");
+Sentry.init({
+  dsn: "https://2948cdf0a6674931b32699ee081cce4e@sentry.io/1805408"
+});
 
 let options = {};
 if (process.env.MODE === "PROD_") {
@@ -20,8 +15,7 @@ if (process.env.MODE === "PROD_") {
   };
 }
 
-const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
-const serverPort = process.env.PORT || process.env[process.env.MODE + "PORT"];
+const serverPort = process.env.PORT || 8002;
 const server = https.createServer(options, app);
 const io = require("socket.io")(server);
 
@@ -41,33 +35,24 @@ app.use(function(req, res, next) {
   next();
 });
 
-//GET APPLICATION`
+//Get HTML
 app.get("/", function(req, res) {
   "use strict";
-  // res.sendFile(__dirname + "/e2ps.html");
-
-  //   io.emit("chatServices", getParams(req.url));
-  io.emit("chatServices", { a: "a", b: "b" });
-  res.send(serverPort);
+  res.sendFile(__dirname + "/e2ps.html");
 });
 
-//SEND NOTIFICATION
+//Set Services
 io.on("connection", function(socket) {
   socket.on("chatServices", function(data) {
     socket.broadcast.emit("chatServices", data);
   });
 
   socket.on("notificationServices", function(data) {
-    console.log(60, "Notification");
     io.emit("notificationServices", data);
   });
 });
 
-// LISTEN CONFIRMATION
-// server.listen(serverPort, ipAddress, function() {
-//   console.log("E2PS Push Notification Server at %s port", serverPort);
-// });
-
+//Set Server & Listen
 server.listen(serverPort, () =>
   console.log("E2PS Push Notification Server at ", serverPort)
 );
