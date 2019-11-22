@@ -22,7 +22,7 @@ if (process.env.MODE === "PROD_") {
 
 // const ipAddress = process.env[process.env.MODE + "IP_ADDRESS"];
 
-const serverPort = process.env.PORT || process.env[process.env.MODE + "PORT"];
+const serverPort = process.env.PORT || 8002;
 const server = https.createServer(options, app);
 const io = require("socket.io")(server);
 
@@ -49,6 +49,7 @@ app.get("/", function(req, res) {
   "use strict";
   res.sendFile(__dirname + "/e2ps.html");
   //   io.emit("chatServices", getParams(req.url));
+  io.emit("chatServices", { a: "b", c: "d", serverPort });
 });
 
 //SEND NOTIFICATION
